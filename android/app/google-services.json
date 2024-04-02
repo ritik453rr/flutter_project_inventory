@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "174385405190",
+    "project_id": "inventory-2cdcc",
+    "storage_bucket": "inventory-2cdcc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174385405190:android:8a84e5f208113486975287",
+        "android_client_info": {
+          "package_name": "com.example.kitchen_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRfDttd2XdAeRPDIyO1oVUUN_WHqCmJS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
