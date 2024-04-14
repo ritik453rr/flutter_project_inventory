@@ -19,6 +19,7 @@ class Cart extends ChangeNotifier {
     notifyListeners();
   }
 
+  
   void removeAll(Product item){
     cartProducts.removeWhere((element) => element==item);
     notifyListeners();

@@ -1,26 +1,17 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kitchen_app/screens/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({ super.key});
-  
+  const ProfileScreen({required this.name, super.key});
+  final String name;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  //Declarations
-  Future<void> logOut() async {
-    try {
-      final googleSignIn = GoogleSignIn();
-      await googleSignIn.signOut();
-    } catch (error) {
-      debugPrint('Error signing out: $error');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,9 +22,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Center(
               //Profile picture
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://a0.anyrgb.com/pngimg/1912/680/icon-user-profile-avatar-ico-facebook-user-head-black-icons-circle.png'),
-                radius: 46,
+                backgroundImage: AssetImage('user.png'),
+                radius: 50,
               ),
             ),
           ),
@@ -41,8 +31,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 7,
           ),
           //User Name
-         const Text(
-             'User',
+          Text(
+            widget.name,
             style: const TextStyle(fontSize: 21, color: Colors.black87),
           ),
           const SizedBox(
@@ -108,13 +98,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(fontSize: 16),
             ),
             onTap: () {
-              logOut().then(
-                (value) => Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute<dynamic>(
-                    builder: (context) => LogInScreen(),
-                  ),
-                  (route) => false,
-                ),
+              showDialog<dynamic>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Alert..!!'),
+                    content: const Text("Are you sure to logout"),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setBool('isLoggedIn', false);
+                          unawaited(
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute<dynamic>(
+                                builder: (context) => const LogInScreen(),
+                              ),
+                              (route) => false,
+                            ),
+                          );
+                        },
+                        child: const Text('yes'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('no'),
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),

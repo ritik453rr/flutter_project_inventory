@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kitchen_app/model/user.dart';
 import 'package:kitchen_app/provider/cart.dart';
 import 'package:kitchen_app/provider/selected_item.dart';
+import 'package:kitchen_app/screens/login_screen.dart';
 import 'package:kitchen_app/screens/products_screen.dart';
 import 'package:kitchen_app/screens/profile_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
-
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  //initialized selectedItemIndex with 0
-  // int selectedItemIndex = 0;
+  String? currentUserId;
+  String? currentUserName;
+  Future<void> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      currentUserId = prefs.getString('userId');
+    });
+    for (final i in LogInScreenState.users) {
+      if (i.id.toString() == currentUserId) {
+        setState(() {
+          currentUserName = i.name;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SelectedItemIndex>(
@@ -25,7 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           builder: (context, cart, child) => BottomNavigationBar(
             currentIndex: selectedItemIndex.selectedNavIndex,
             selectedItemColor: Colors.blue.shade500,
-            items: const <BottomNavigationBarItem>[
+            items: const [
               //All Products
               BottomNavigationBarItem(
                 icon: Icon(Icons.fastfood),
@@ -50,9 +65,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
         body: selectedItemIndex.selectedNavIndex == 1
-            ? const ProfileScreen()
+            ? ProfileScreen(
+                name: currentUserName ?? 'user',
+              )
             : const ProductsScreen(),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
   }
 }

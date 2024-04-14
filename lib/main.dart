@@ -1,18 +1,21 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/provider/cart.dart';
 import 'package:kitchen_app/provider/selected_item.dart';
-import 'package:kitchen_app/screens/login_screen.dart';
+import 'package:kitchen_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() async {
-  //WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
+void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -23,9 +26,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: Colors.blue,
         ),
-        home: const LogInScreen(),
+        home: const SplashScreen(),
       ),
     );
   }
