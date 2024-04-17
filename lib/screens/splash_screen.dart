@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/screens/dashboard_screen.dart';
 import 'package:kitchen_app/screens/login_screen.dart';
+import 'package:kitchen_app/screens/products_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (context) => const DashboardScreen(),
+                builder: (context) => const ProductsScreen(),
               ),
             );
           } else {
@@ -53,34 +54,40 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Container(
-              width: 150,
-              height: 150,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('inventory.png'),
-                  fit: BoxFit.fill,
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.width * 0.5,
+              ),
+              Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.width * 0.37,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/inventory.png'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              SizedBox(
+                height: MediaQuery.of(context).size.width * 0.7,
+              ),
+              const Text(
+                'Inventory',
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(
-            height: 180,
-          ),
-          const Text(
-            'Inventory',
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.grey,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

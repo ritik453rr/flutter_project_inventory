@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/user.dart';
 import 'package:kitchen_app/screens/dashboard_screen.dart';
+import 'package:kitchen_app/screens/products_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -17,10 +18,31 @@ class LogInScreenState extends State<LogInScreen> {
   TextEditingController userIdController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   static List<User> users = [
-    User(name: "Ritik", id: 21120009, password: "Ritik@123"),
-    User(name: "Vishal", id: 21120008, password: "Vishal@123"),
-    User(name: "Shivek", id: 21120001, password: "Shivek@123"),
-    User(name: "Prince", id: 21120003, password: "Prince@123"),
+    User(
+        name: "Ritik",
+        id: 21120009,
+        password: "Ritik@123",
+        mob: 9690302137,
+        email: "dritik458@gmail.com"),
+    User(
+        name: "Vishal",
+        id: 21120008,
+        password: "Vishal@123",
+        mob: 8077885544,
+        email: "vishal55@gmail.com"),
+    User(
+        name: "Shivek",
+        id: 21120001,
+        password: "Shivek@123",
+        mob: 9988776655,
+        email: "shivek@gmail.com"),
+    User(
+      name: "Prince",
+      id: 21120003,
+      password: "Prince@123",
+      mob: 9877554433,
+      email: 'prince5@gmail.com',
+    ),
   ];
   late User currentUser;
   bool userExist() {
@@ -164,7 +186,7 @@ class LogInScreenState extends State<LogInScreen> {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute<dynamic>(
-                              builder: (context) => DashboardScreen(),
+                              builder: (context) => const ProductsScreen(),
                             ),
                             (route) => false,
                           ),

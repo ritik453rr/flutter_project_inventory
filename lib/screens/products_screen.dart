@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/product.dart';
+import 'package:kitchen_app/model/user.dart';
 import 'package:kitchen_app/provider/cart.dart';
 import 'package:kitchen_app/provider/selected_item.dart';
+import 'package:kitchen_app/screens/login_screen.dart';
+import 'package:kitchen_app/screens/navbar.dart';
 import 'package:kitchen_app/screens/payment_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -31,7 +35,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   ];
   //List to store products
   List<Product> foundProduct = [];
-  //Fun to display searched Product
+  //Function to display searched Product
   void runFilter(String enteredKeyword) {
     var results = <Product>[];
     if (enteredKeyword.isNotEmpty) {
@@ -48,9 +52,26 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
   }
 
+  String? currentUserId;
+  User? currentUser;
+  Future<void> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      currentUserId = prefs.getString('userId');
+    });
+    for (final i in LogInScreenState.users) {
+      if (i.id.toString() == currentUserId) {
+        setState(() {
+          currentUser = i;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
     foundProduct = productList;
+    getUser();
     super.initState();
   }
 
@@ -59,6 +80,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return Consumer<Cart>(
       builder: (context, cart, child) => Scaffold(
         backgroundColor: Colors.white,
+        drawer: NavBar(
+          user: currentUser,
+        ),
         //Bottomsheet
         bottomSheet: cart.cartProducts.isNotEmpty
             ? Container(
@@ -94,9 +118,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 ),
                               );
                             },
-                            //Styling on continue to payment
+                            //Styling on continue to payment button
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue.shade500,
+                              backgroundColor: Colors.red.shade500,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -113,16 +137,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
               )
             : const Text(''),
+        appBar: AppBar(
+          title: const Text('Inventory'),
+          centerTitle: true,
+          backgroundColor: Colors.redAccent,
+          surfaceTintColor: Colors.redAccent,
+        ),
         body: Column(
           children: [
             Container(
-              height: 190,
+              height: 115,
               color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 70, left: 8, right: 8),
+                    padding: const EdgeInsets.only(top: 5, left: 8, right: 8),
                     child: SizedBox(
                       height: 60,
                       child: TextField(

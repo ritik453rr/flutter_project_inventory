@@ -1,46 +1,31 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:kitchen_app/model/user.dart';
 import 'package:kitchen_app/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({required this.name, super.key});
-  final String name;
+class NavBar extends StatelessWidget {
+  const NavBar({required this.user, super.key});
+  final User? user;
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 140),
-            child: Center(
-              //Profile picture
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/user.png'),
-                radius: 50,
-              ),
+          UserAccountsDrawerHeader(
+            accountName: Text(
+              user!.name,
+              style: TextStyle(fontSize: 25),
             ),
+            accountEmail: Text(user!.email),
+            decoration: BoxDecoration(color: Colors.red),
           ),
-          const SizedBox(
-            height: 7,
-          ),
-          //User Name
-          Text(
-            widget.name,
-            style: const TextStyle(fontSize: 21, color: Colors.black87),
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          //Payment History
-          const ListTile(
-            leading: CircleAvatar(
+          //Payment history
+          ListTile(
+            leading: const CircleAvatar(
               backgroundColor: Colors.black54,
               radius: 19,
               child: Icon(
@@ -48,11 +33,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.white,
               ),
             ),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            title: Text(
+            trailing: const Icon(Icons.keyboard_arrow_right),
+            title: const Text(
               'Payment History',
               style: TextStyle(fontSize: 16),
             ),
+            onTap: () {},
           ),
           const SizedBox(
             height: 6,
@@ -61,8 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             thickness: 2,
           ),
           //Raise a request
-          const ListTile(
-            leading: CircleAvatar(
+          ListTile(
+            leading: const CircleAvatar(
               backgroundColor: Colors.black54,
               radius: 19,
               child: Icon(
@@ -70,11 +56,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.white,
               ),
             ),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            title: Text(
+            trailing: const Icon(Icons.keyboard_arrow_right),
+            title: const Text(
               'Raise a Request',
               style: TextStyle(fontSize: 16),
             ),
+            onTap: () {},
           ),
           const SizedBox(
             height: 6,
