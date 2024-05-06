@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/user.dart';
-import 'package:kitchen_app/screens/dashboard_screen.dart';
 import 'package:kitchen_app/screens/products_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +13,8 @@ class LogInScreen extends StatefulWidget {
 }
 
 class LogInScreenState extends State<LogInScreen> {
+  //declarations......
+  bool visibility = true;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController userIdController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -132,28 +133,39 @@ class LogInScreenState extends State<LogInScreen> {
                       //password field
                       TextFormField(
                         controller: passwordController,
+                        obscureText: visibility,
                         validator: (value) {
                           if (value == null || value == '') {
                             return "enter password";
                           }
                         },
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.lock),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                visibility = !visibility;
+                              });
+                            },
+                            icon: visibility == true
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
+                          ),
                           labelText: 'Password',
-                          labelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
+                          labelStyle: const TextStyle(color: Colors.black),
+                          enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(width: 1.5),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(width: 1.5),
                           ),
-                          errorBorder: OutlineInputBorder(
+                          errorBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               width: 1.5,
                               color: Colors.red,
                             ),
                           ),
-                          focusedErrorBorder: OutlineInputBorder(
+                          focusedErrorBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                               width: 1.5,
                               color: Colors.red,
@@ -174,7 +186,7 @@ class LogInScreenState extends State<LogInScreen> {
                 height: MediaQuery.of(context).size.width * 0.14,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.redAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -192,8 +204,8 @@ class LogInScreenState extends State<LogInScreen> {
                           ),
                         );
                         final prefs = await SharedPreferences.getInstance();
-                        prefs.setBool('isLoggedIn', true);
-                        prefs.setString('userId', userIdController.text);
+                        await prefs.setBool('isLoggedIn', true);
+                        await prefs.setString('userId', userIdController.text);
                       } else {
                         unawaited(
                           showDialog<dynamic>(

@@ -1,51 +1,85 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/user.dart';
 import 'package:kitchen_app/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NavBar extends StatelessWidget {
-  const NavBar({required this.user, super.key});
-  final User? user;
+class NavBar extends StatefulWidget {
+  const NavBar({ super.key});
+
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+class _NavBarState extends State<NavBar> {
+  String? currentUserId;
+  User? currentUser;
+  Future<void> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      currentUserId = prefs.getString('userId');
+    });
+
+    for (final i in LogInScreenState.users) {
+      if (i.id.toString() == currentUserId) {
+        setState(() {
+          currentUser = i;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (currentUser == null) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
             accountName: Text(
-              user!.name,
-              style: TextStyle(fontSize: 25),
+              currentUser!.name,
+              style: const TextStyle(fontSize: 25),
             ),
-            accountEmail: Text(user!.email),
-            decoration: BoxDecoration(color: Colors.red),
+            accountEmail: Text(
+              currentUser!.email,
+            ),
+            decoration: const BoxDecoration(color: Colors.redAccent),
           ),
           //Payment history
-          ListTile(
-            leading: const CircleAvatar(
-              backgroundColor: Colors.black54,
-              radius: 19,
-              child: Icon(
-                Icons.payment,
-                color: Colors.white,
-              ),
-            ),
-            trailing: const Icon(Icons.keyboard_arrow_right),
-            title: const Text(
-              'Payment History',
-              style: TextStyle(fontSize: 16),
-            ),
-            onTap: () {},
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          const Divider(
-            thickness: 2,
-          ),
+          // ListTile(
+          //   leading: const CircleAvatar(
+          //     backgroundColor: Colors.black54,
+          //     radius: 19,
+          //     child: Icon(
+          //       Icons.payment,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          //   trailing: const Icon(Icons.keyboard_arrow_right),
+          //   title: const Text(
+          //     'Payment History',
+          //     style: TextStyle(fontSize: 16),
+          //   ),
+          //   onTap: () {},
+          // ),
+          // const SizedBox(
+          //   height: 6,
+          // ),
+          // const Divider(
+          //   thickness: 2,
+          // ),
           //Raise a request
           ListTile(
             leading: const CircleAvatar(

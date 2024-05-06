@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:kitchen_app/screens/dashboard_screen.dart';
 import 'package:kitchen_app/screens/login_screen.dart';
 import 'package:kitchen_app/screens/products_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';

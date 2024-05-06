@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/product.dart';
-import 'package:kitchen_app/model/user.dart';
 import 'package:kitchen_app/provider/cart.dart';
 import 'package:kitchen_app/provider/selected_item.dart';
-import 'package:kitchen_app/screens/login_screen.dart';
 import 'package:kitchen_app/screens/navbar.dart';
 import 'package:kitchen_app/screens/payment_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -52,26 +49,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
   }
 
-  String? currentUserId;
-  User? currentUser;
-  Future<void> getUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      currentUserId = prefs.getString('userId');
-    });
-    for (final i in LogInScreenState.users) {
-      if (i.id.toString() == currentUserId) {
-        setState(() {
-          currentUser = i;
-        });
-      }
-    }
-  }
-
   @override
   void initState() {
     foundProduct = productList;
-    getUser();
     super.initState();
   }
 
@@ -80,9 +60,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return Consumer<Cart>(
       builder: (context, cart, child) => Scaffold(
         backgroundColor: Colors.white,
-        drawer: NavBar(
-          user: currentUser,
-        ),
+        drawer: const NavBar(),
         //Bottomsheet
         bottomSheet: cart.cartProducts.isNotEmpty
             ? Container(
@@ -120,7 +98,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             },
                             //Styling on continue to payment button
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red.shade500,
+                              backgroundColor: Colors.redAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -155,6 +133,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     padding: const EdgeInsets.only(top: 5, left: 8, right: 8),
                     child: SizedBox(
                       height: 60,
+                      //Seach Product field
                       child: TextField(
                         onChanged: runFilter,
                         decoration: InputDecoration(
