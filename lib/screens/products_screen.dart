@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/product.dart';
 import 'package:kitchen_app/provider/cart.dart';
 import 'package:kitchen_app/provider/selected_item.dart';
-import 'package:kitchen_app/screens/navbar.dart';
-import 'package:kitchen_app/screens/payment_screen.dart';
+import 'package:kitchen_app/screens/drawar_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -14,6 +14,8 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  //instance of razorpay
+  final _razorpay = Razorpay();
   //List of all Products
   List<Product> productList = [
     Product(id: 1, name: 'Pepsi (100ml)', price: 20),
@@ -49,10 +51,31 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
   }
 
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // Do something when payment succeeds
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Do something when payment fails
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet was selected
+  }
   @override
   void initState() {
     foundProduct = productList;
+    _razorpay
+      ..on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess)
+      ..on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError)
+      ..on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear(); // Removes all listeners
+    super.dispose();
   }
 
   @override
@@ -60,7 +83,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return Consumer<Cart>(
       builder: (context, cart, child) => Scaffold(
         backgroundColor: Colors.white,
-        drawer: const NavBar(),
+        drawer: const DrawerScreen(),
         //Bottomsheet
         bottomSheet: cart.cartProducts.isNotEmpty
             ? Container(
@@ -90,15 +113,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           width: 300,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute<dynamic>(
-                                  builder: (context) => const PaymentScreen(),
-                                ),
-                              );
+                              final options = {
+                                'key': 'rzp_test_oju4wyTNGl4Jro',
+                                'amount': cart.total * 100,
+                                'name': 'XYZ Pvt Ltd.',
+                                'external': {
+                                  'wallets': [
+                                    'paytm',
+                                  ],
+                                },
+                              };
+                              _razorpay.open(options);
                             },
                             //Styling on continue to payment button
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.redAccent,
+                              backgroundColor: Colors.blue.shade700,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -116,10 +145,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
               )
             : const Text(''),
         appBar: AppBar(
-          title: const Text('Inventory'),
+          title: const Text('Inventory', style: TextStyle(color: Colors.white)),
           centerTitle: true,
-          backgroundColor: Colors.redAccent,
-          surfaceTintColor: Colors.redAccent,
+          backgroundColor: Colors.blue.shade700,
+          surfaceTintColor: Colors.blue.shade700,
         ),
         body: Column(
           children: [

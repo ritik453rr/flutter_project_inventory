@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/user.dart';
 import 'package:kitchen_app/screens/products_screen.dart';
@@ -45,12 +44,10 @@ class LogInScreenState extends State<LogInScreen> {
       email: 'prince5@gmail.com',
     ),
   ];
-  late User currentUser;
   bool userExist() {
     for (final i in users) {
       if (i.id.toString() == userIdController.text &&
           i.password == passwordController.text) {
-        currentUser = i;
         return true;
       }
     }
@@ -100,7 +97,7 @@ class LogInScreenState extends State<LogInScreen> {
                         controller: userIdController,
                         validator: (value) {
                           if (value == null || value == '') {
-                            return "enter user id";
+                            return 'enter user id';
                           }
                         },
                         decoration: const InputDecoration(
@@ -136,7 +133,7 @@ class LogInScreenState extends State<LogInScreen> {
                         obscureText: visibility,
                         validator: (value) {
                           if (value == null || value == '') {
-                            return "enter password";
+                            return 'enter password';
                           }
                         },
                         decoration: InputDecoration(
@@ -186,7 +183,7 @@ class LogInScreenState extends State<LogInScreen> {
                 height: MediaQuery.of(context).size.width * 0.14,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: Colors.blue.shade700,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
