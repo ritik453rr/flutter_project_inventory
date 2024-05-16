@@ -18,19 +18,27 @@ class _ProductsScreenState extends State<ProductsScreen> {
   final _razorpay = Razorpay();
   //List of all Products
   List<Product> productList = [
-    Product(id: 1, name: 'Pepsi (100ml)', price: 20),
-    Product(id: 2, name: 'Lays', price: 15),
-    Product(id: 3, name: 'Takatak', price: 10),
-    Product(id: 4, name: 'Coconut Biscuit', price: 10),
-    Product(id: 5, name: 'Parle G', price: 10),
-    Product(id: 6, name: 'Dairy Milk', price: 20),
-    Product(id: 7, name: 'Kurkure', price: 10),
-    Product(id: 8, name: 'Chips', price: 50),
-    Product(id: 9, name: 'Sprite', price: 20),
-    Product(id: 10, name: 'Pringles', price: 50),
-    Product(id: 11, name: 'Sandwich', price: 25),
-    Product(id: 12, name: 'Kitkat', price: 10),
-    Product(id: 13, name: 'Punjabi Tadka', price: 10),
+    Product(id: 1, name: 'Pepsi (100ml)', price: 20, category: 'Beverage'),
+    Product(id: 2, name: 'Lays', price: 15, category: 'Snacks'),
+    Product(id: 3, name: 'Takatak', price: 10, category: 'Snacks'),
+    Product(id: 4, name: 'Coconut Biscuit', price: 10, category: 'Snacks'),
+    Product(id: 5, name: 'Parle G', price: 10, category: 'Snacks'),
+    Product(
+        id: 6, name: 'Dairy Milk', price: 20, category: 'Chocolate and Candy'),
+    Product(id: 7, name: 'Kurkure', price: 10, category: 'Snacks'),
+    Product(id: 8, name: 'Chips', price: 50, category: 'Snacks'),
+    Product(id: 9, name: 'Sprite', price: 20, category: 'Beverage'),
+    Product(id: 10, name: 'Pringles', price: 50, category: 'Snacks'),
+    Product(id: 11, name: 'Sandwich', price: 25, category: 'Snacks'),
+    Product(id: 12, name: 'Kitkat', price: 10, category: 'Chocolate and Candy'),
+    Product(id: 13, name: 'Punjabi Tadka', price: 10, category: 'Snacks'),
+    Product(id: 14, name: 'KitKat', price: 20, category: 'Chocolate and Candy'),
+    Product(id: 15, name: 'Sprite', price: 40, category: 'Beverage'),
+    Product(id: 16, name: 'String', price: 20, category: 'Beverage'),
+    Product(id: 17, name: 'Frooti', price: 10, category: 'Beverage'),
+    Product(id: 18, name: 'Aalu Bhujiya', price: 10, category: 'Snacks'),
+    Product(id: 19, name: 'Teda Meda', price: 10, category: 'Snacks'),
+    Product(id: 20, name: 'Banana Chips', price: 20, category: 'Snacks'),
   ];
   //List to store products
   List<Product> foundProduct = [];
@@ -51,9 +59,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    // Do something when payment succeeds
-  }
+  void handlePaymentSuccess(PaymentSuccessResponse response) {}
 
   void _handlePaymentError(PaymentFailureResponse response) {
     // Do something when payment fails
@@ -62,11 +68,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
   void _handleExternalWallet(ExternalWalletResponse response) {
     // Do something when an external wallet was selected
   }
+
   @override
   void initState() {
     foundProduct = productList;
     _razorpay
-      ..on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess)
+      ..on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess)
       ..on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError)
       ..on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     super.initState();
@@ -88,7 +95,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         bottomSheet: cart.cartProducts.isNotEmpty
             ? Container(
                 width: double.infinity,
-                height: 110,
+                height: 150,
                 color: Colors.white,
                 child: Consumer<SelectedItemIndex>(
                   builder: (context, selectedIndex, child) => Column(

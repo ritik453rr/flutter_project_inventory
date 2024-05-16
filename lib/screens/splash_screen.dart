@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/screens/login_screen.dart';
 import 'package:kitchen_app/screens/products_screen.dart';
+import 'package:kitchen_app/screens/tabbar_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute<dynamic>(
-                builder: (context) => const ProductsScreen(),
+                builder: (context) => const TabbarScreen(),
               ),
             );
           } else {
