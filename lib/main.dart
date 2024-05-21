@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/provider/cart.dart';
-import 'package:kitchen_app/provider/selected_item.dart';
 import 'package:kitchen_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -15,15 +14,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => SelectedItemIndex()),
         ChangeNotifierProvider(create: (context) => Cart()),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: Colors.blue,
-        ),
-        home: const SplashScreen(),
+        home:  SplashScreen(),
       ),
     );
   }

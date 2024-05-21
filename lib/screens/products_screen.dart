@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/product.dart';
 import 'package:kitchen_app/provider/cart.dart';
-import 'package:kitchen_app/provider/selected_item.dart';
 import 'package:kitchen_app/screens/drawar_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -62,11 +61,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
   void handlePaymentSuccess(PaymentSuccessResponse response) {}
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    // Do something when payment fails
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    // Do something when an external wallet was selected
   }
 
   @override
@@ -97,8 +94,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 width: double.infinity,
                 height: 150,
                 color: Colors.white,
-                child: Consumer<SelectedItemIndex>(
-                  builder: (context, selectedIndex, child) => Column(
+                child:  Column(
                     children: [
                       //Item count
                       Text(
@@ -148,7 +144,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       ),
                     ],
                   ),
-                ),
+                
               )
             : const Text(''),
         appBar: AppBar(

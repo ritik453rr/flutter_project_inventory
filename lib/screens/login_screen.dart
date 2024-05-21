@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/user.dart';
 import 'package:kitchen_app/screens/products_screen.dart';
+import 'package:kitchen_app/screens/tabbar_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -100,7 +101,7 @@ class LogInScreenState extends State<LogInScreen> {
                             return 'enter user id';
                           }
                         },
-                        decoration: const InputDecoration(
+                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person),
                           labelText: 'User ID',
                           labelStyle: TextStyle(color: Colors.black),
@@ -195,7 +196,7 @@ class LogInScreenState extends State<LogInScreen> {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute<dynamic>(
-                              builder: (context) => const ProductsScreen(),
+                              builder: (context) => const TabbarScreen(),
                             ),
                             (route) => false,
                           ),
