@@ -19,7 +19,7 @@ class Cart extends ChangeNotifier {
     notifyListeners();
   }
 
-  
+  //remove the same item multiple time from cart
   void removeAll(Product item){
     cartProducts.removeWhere((element) => element==item);
     notifyListeners();

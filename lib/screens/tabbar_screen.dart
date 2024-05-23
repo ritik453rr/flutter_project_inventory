@@ -62,6 +62,7 @@ class TabbarScreenState extends State<TabbarScreen> {
 
   //Instance of razorpay
   final _razorpay = Razorpay();
+  //tab initialIndex
   int initialIndex = 0;
 
   void handlePaymentSuccess(PaymentSuccessResponse response) {
@@ -88,13 +89,16 @@ class TabbarScreenState extends State<TabbarScreen> {
     super.dispose();
   }
 
+  //fucntion to filter the product by search bar
   List<Product> _getFilteredProducts(List<Product> products) {
     if (searchQuery.isEmpty) {
       return products;
     } else {
       return products
-          .where((product) =>
-              product.name.toLowerCase().contains(searchQuery.toLowerCase()),)
+          .where(
+            (product) =>
+                product.name.toLowerCase().contains(searchQuery.toLowerCase()),
+          )
           .toList();
     }
   }
@@ -124,7 +128,7 @@ class TabbarScreenState extends State<TabbarScreen> {
                 disabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black),
                 ),
-                 focusedBorder: UnderlineInputBorder(
+                focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black),
                 ),
               ),
@@ -134,7 +138,7 @@ class TabbarScreenState extends State<TabbarScreen> {
             bottom: const TabBar(
               isScrollable: true,
               indicatorColor: Colors.black38,
-              labelPadding: EdgeInsets.only(right: 45),
+              labelPadding: EdgeInsets.only(right: 35),
               tabs: [
                 Tab(
                   child: Text(
@@ -220,97 +224,107 @@ class TabbarScreenState extends State<TabbarScreen> {
                 padding: cart.cartProducts.isNotEmpty
                     ? const EdgeInsets.only(bottom: 122)
                     : const EdgeInsets.only(bottom: 1),
-                child: ListView.builder(
-                  itemCount: _getFilteredProducts(snacksList).length,
-                  itemBuilder: (context, index) {
+                child: Builder(
+                  builder: (context) {
                     final snacks = _getFilteredProducts(snacksList);
-                    final itemAlreadyInCart =
-                        cart.cartProducts.contains(snacks[index]);
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 5,
-                        left: 9,
-                        right: 9,
-                      ),
-                      child: SizedBox(
-                        height: 70,
-                        child: ListTile(
-                          tileColor: Colors.black12,
-                          onTap: () {
-                            if (cart.cartProducts.contains(snacks[index])) {
-                              cart
-                                ..removeAll(snacks[index])
-                                ..decreaseItemCount()
-                                ..calculateTotal();
-                            } else {
-                              cart
-                                ..addItem(snacks[index])
-                                ..increaseItemCount()
-                                ..calculateTotal();
-                            }
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(width: 1.4),
+                    if (snacks.isEmpty) {
+                      return const Center(child: Text('No product found'));
+                    }
+                    return ListView.builder(
+                      itemCount: _getFilteredProducts(snacksList).length,
+                      itemBuilder: (context, index) {
+                        // final snacks = _getFilteredProducts(snacksList);
+                        final itemAlreadyInCart =
+                            cart.cartProducts.contains(snacks[index]);
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 5,
+                            left: 9,
+                            right: 9,
                           ),
-                          title: Text(snacks[index].name),
-                          subtitle: Text('\u{20B9}${snacks[index].price}'),
-                          leading: Checkbox(
-                            activeColor: Colors.blue.shade500,
-                            shape: const CircleBorder(),
-                            value: cart.cartProducts.contains(snacks[index]),
-                            onChanged: (value) {
-                              if (cart.cartProducts.contains(snacks[index])) {
-                                cart
-                                  ..removeAll(snacks[index])
-                                  ..decreaseItemCount()
-                                  ..calculateTotal();
-                              } else {
-                                cart
-                                  ..addItem(snacks[index])
-                                  ..increaseItemCount()
-                                  ..calculateTotal();
-                              }
-                            },
+                          child: SizedBox(
+                            height: 70,
+                            child: ListTile(
+                              tileColor: Colors.black12,
+                              onTap: () {
+                                if (cart.cartProducts.contains(snacks[index])) {
+                                  cart
+                                    ..removeAll(snacks[index])
+                                    ..decreaseItemCount()
+                                    ..calculateTotal();
+                                } else {
+                                  cart
+                                    ..addItem(snacks[index])
+                                    ..increaseItemCount()
+                                    ..calculateTotal();
+                                }
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: const BorderSide(width: 1.4),
+                              ),
+                              title: Text(snacks[index].name),
+                              subtitle: Text('\u{20B9}${snacks[index].price}'),
+                              leading: Checkbox(
+                                activeColor: Colors.blue.shade500,
+                                shape: const CircleBorder(),
+                                value:
+                                    cart.cartProducts.contains(snacks[index]),
+                                onChanged: (value) {
+                                  if (cart.cartProducts
+                                      .contains(snacks[index])) {
+                                    cart
+                                      ..removeAll(snacks[index])
+                                      ..decreaseItemCount()
+                                      ..calculateTotal();
+                                  } else {
+                                    cart
+                                      ..addItem(snacks[index])
+                                      ..increaseItemCount()
+                                      ..calculateTotal();
+                                  }
+                                },
+                              ),
+                              trailing: itemAlreadyInCart
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            cart.removeItem(snacks[index]);
+                                            if (!cart.cartProducts
+                                                .contains(snacks[index])) {
+                                              cart.decreaseItemCount();
+                                            }
+                                            cart.calculateTotal();
+                                          },
+                                          icon: const Icon(Icons.remove),
+                                        ),
+                                        Text(
+                                          cart.cartProducts
+                                              .where((item) {
+                                                return item == snacks[index];
+                                              })
+                                              .length
+                                              .toString(),
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.add),
+                                          onPressed: () {
+                                            cart
+                                              ..addItem(snacks[index])
+                                              ..calculateTotal();
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : const Text(''),
+                            ),
                           ),
-                          trailing: itemAlreadyInCart
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        cart.removeItem(snacks[index]);
-                                        if (!cart.cartProducts
-                                            .contains(snacks[index])) {
-                                          cart.decreaseItemCount();
-                                        }
-                                        cart.calculateTotal();
-                                      },
-                                      icon: const Icon(Icons.remove),
-                                    ),
-                                    Text(
-                                      cart.cartProducts
-                                          .where((item) {
-                                            return item == snacks[index];
-                                          })
-                                          .length
-                                          .toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () {
-                                        cart
-                                          ..addItem(snacks[index])
-                                          ..calculateTotal();
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : const Text(''),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -320,98 +334,108 @@ class TabbarScreenState extends State<TabbarScreen> {
                 padding: cart.cartProducts.isNotEmpty
                     ? const EdgeInsets.only(bottom: 122)
                     : const EdgeInsets.only(bottom: 1),
-                child: ListView.builder(
-                  itemCount: _getFilteredProducts(beverageList).length,
-                  itemBuilder: (context, index) {
+                child: Builder(
+                  builder: (context) {
                     final beverages = _getFilteredProducts(beverageList);
-                    final itemAlreadyInCart =
-                        cart.cartProducts.contains(beverages[index]);
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 5,
-                        left: 9,
-                        right: 9,
-                      ),
-                      child: SizedBox(
-                        height: 70,
-                        child: ListTile(
-                          tileColor: Colors.black12,
-                          onTap: () {
-                            if (cart.cartProducts.contains(beverages[index])) {
-                              cart
-                                ..removeAll(beverages[index])
-                                ..decreaseItemCount()
-                                ..calculateTotal();
-                            } else {
-                              cart
-                                ..addItem(beverages[index])
-                                ..increaseItemCount()
-                                ..calculateTotal();
-                            }
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(width: 1.4),
+                    if (beverages.isEmpty) {
+                      return const Center(child: Text('No product found'));
+                    }
+                    return ListView.builder(
+                      itemCount: _getFilteredProducts(beverageList).length,
+                      itemBuilder: (context, index) {
+                        final itemAlreadyInCart =
+                            cart.cartProducts.contains(beverages[index]);
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 5,
+                            left: 9,
+                            right: 9,
                           ),
-                          title: Text(beverages[index].name),
-                          subtitle: Text('\u{20B9}${beverages[index].price}'),
-                          leading: Checkbox(
-                            activeColor: Colors.blue.shade500,
-                            shape: const CircleBorder(),
-                            value: cart.cartProducts.contains(beverages[index]),
-                            onChanged: (value) {
-                              if (cart.cartProducts
-                                  .contains(beverages[index])) {
-                                cart
-                                  ..removeAll(beverages[index])
-                                  ..decreaseItemCount()
-                                  ..calculateTotal();
-                              } else {
-                                cart
-                                  ..addItem(beverages[index])
-                                  ..increaseItemCount()
-                                  ..calculateTotal();
-                              }
-                            },
+                          child: SizedBox(
+                            height: 70,
+                            child: ListTile(
+                              tileColor: Colors.black12,
+                              onTap: () {
+                                if (cart.cartProducts
+                                    .contains(beverages[index])) {
+                                  cart
+                                    ..removeAll(beverages[index])
+                                    ..decreaseItemCount()
+                                    ..calculateTotal();
+                                } else {
+                                  cart
+                                    ..addItem(beverages[index])
+                                    ..increaseItemCount()
+                                    ..calculateTotal();
+                                }
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: const BorderSide(width: 1.4),
+                              ),
+                              title: Text(beverages[index].name),
+                              subtitle:
+                                  Text('\u{20B9}${beverages[index].price}'),
+                              leading: Checkbox(
+                                activeColor: Colors.blue.shade500,
+                                shape: const CircleBorder(),
+                                value: cart.cartProducts
+                                    .contains(beverages[index]),
+                                onChanged: (value) {
+                                  if (cart.cartProducts
+                                      .contains(beverages[index])) {
+                                    cart
+                                      ..removeAll(beverages[index])
+                                      ..decreaseItemCount()
+                                      ..calculateTotal();
+                                  } else {
+                                    cart
+                                      ..addItem(beverages[index])
+                                      ..increaseItemCount()
+                                      ..calculateTotal();
+                                  }
+                                },
+                              ),
+                              trailing: itemAlreadyInCart
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            cart.removeItem(beverages[index]);
+                                            if (!cart.cartProducts
+                                                .contains(beverages[index])) {
+                                              cart.decreaseItemCount();
+                                            }
+                                            cart.calculateTotal();
+                                          },
+                                          icon: const Icon(Icons.remove),
+                                        ),
+                                        Text(
+                                          cart.cartProducts
+                                              .where((item) {
+                                                return item == beverages[index];
+                                              })
+                                              .length
+                                              .toString(),
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.add),
+                                          onPressed: () {
+                                            cart
+                                              ..addItem(beverages[index])
+                                              ..calculateTotal();
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : const Text(''),
+                            ),
                           ),
-                          trailing: itemAlreadyInCart
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        cart.removeItem(beverages[index]);
-                                        if (!cart.cartProducts
-                                            .contains(beverages[index])) {
-                                          cart.decreaseItemCount();
-                                        }
-                                        cart.calculateTotal();
-                                      },
-                                      icon: const Icon(Icons.remove),
-                                    ),
-                                    Text(
-                                      cart.cartProducts
-                                          .where((item) {
-                                            return item == beverages[index];
-                                          })
-                                          .length
-                                          .toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () {
-                                        cart
-                                          ..addItem(beverages[index])
-                                          ..calculateTotal();
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : const Text(''),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -421,101 +445,110 @@ class TabbarScreenState extends State<TabbarScreen> {
                 padding: cart.cartProducts.isNotEmpty
                     ? const EdgeInsets.only(bottom: 122)
                     : const EdgeInsets.only(bottom: 1),
-                child: ListView.builder(
-                  itemCount: _getFilteredProducts(chocoCandyList).length,
-                  itemBuilder: (context, index) {
-                    final chocoCandies = _getFilteredProducts(chocoCandyList);
-                    final itemAlreadyInCart =
-                        cart.cartProducts.contains(chocoCandies[index]);
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 5,
-                        left: 9,
-                        right: 9,
-                      ),
-                      child: SizedBox(
-                        height: 70,
-                        child: ListTile(
-                          tileColor: Colors.black12,
-                          onTap: () {
-                            if (cart.cartProducts
-                                .contains(chocoCandies[index])) {
-                              cart
-                                ..removeAll(chocoCandies[index])
-                                ..decreaseItemCount()
-                                ..calculateTotal();
-                            } else {
-                              cart
-                                ..addItem(chocoCandies[index])
-                                ..increaseItemCount()
-                                ..calculateTotal();
-                            }
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(width: 1.4),
+                child: Builder(
+                  builder: (context) {
+                    final chocoCandy = _getFilteredProducts(chocoCandyList);
+                    if (chocoCandy.isEmpty) {
+                      return const Center(child: Text('No product found'));
+                    }
+                    return ListView.builder(
+                      itemCount: _getFilteredProducts(chocoCandyList).length,
+                      itemBuilder: (context, index) {
+                        final itemAlreadyInCart =
+                            cart.cartProducts.contains(chocoCandy[index]);
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 5,
+                            left: 9,
+                            right: 9,
                           ),
-                          title: Text(chocoCandies[index].name),
-                          subtitle:
-                              Text('\u{20B9}${chocoCandies[index].price}'),
-                          leading: Checkbox(
-                            activeColor: Colors.blue.shade500,
-                            shape: const CircleBorder(),
-                            value:
-                                cart.cartProducts.contains(chocoCandies[index]),
-                            onChanged: (value) {
-                              if (cart.cartProducts
-                                  .contains(chocoCandies[index])) {
-                                cart
-                                  ..removeAll(chocoCandies[index])
-                                  ..decreaseItemCount()
-                                  ..calculateTotal();
-                              } else {
-                                cart
-                                  ..addItem(chocoCandies[index])
-                                  ..increaseItemCount()
-                                  ..calculateTotal();
-                              }
-                            },
+                          child: SizedBox(
+                            height: 70,
+                            child: ListTile(
+                              tileColor: Colors.black12,
+                              onTap: () {
+                                if (cart.cartProducts
+                                    .contains(chocoCandy[index])) {
+                                  cart
+                                    ..removeAll(chocoCandy[index])
+                                    ..decreaseItemCount()
+                                    ..calculateTotal();
+                                } else {
+                                  cart
+                                    ..addItem(chocoCandy[index])
+                                    ..increaseItemCount()
+                                    ..calculateTotal();
+                                }
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: const BorderSide(width: 1.4),
+                              ),
+                              title: Text(chocoCandy[index].name),
+                              subtitle:
+                                  Text('\u{20B9}${chocoCandy[index].price}'),
+                              leading: Checkbox(
+                                activeColor: Colors.blue.shade500,
+                                shape: const CircleBorder(),
+                                value: cart.cartProducts
+                                    .contains(chocoCandy[index]),
+                                onChanged: (value) {
+                                  if (cart.cartProducts
+                                      .contains(chocoCandy[index])) {
+                                    cart
+                                      ..removeAll(chocoCandy[index])
+                                      ..decreaseItemCount()
+                                      ..calculateTotal();
+                                  } else {
+                                    cart
+                                      ..addItem(chocoCandy[index])
+                                      ..increaseItemCount()
+                                      ..calculateTotal();
+                                  }
+                                },
+                              ),
+                              trailing: itemAlreadyInCart
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            cart.removeItem(
+                                                chocoCandy[index]);
+                                            if (!cart.cartProducts.contains(
+                                                chocoCandy[index])) {
+                                              cart.decreaseItemCount();
+                                            }
+                                            cart.calculateTotal();
+                                          },
+                                          icon: const Icon(Icons.remove),
+                                        ),
+                                        Text(
+                                          cart.cartProducts
+                                              .where((item) {
+                                                return item ==
+                                                    chocoCandy[index];
+                                              })
+                                              .length
+                                              .toString(),
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.add),
+                                          onPressed: () {
+                                            cart
+                                              ..addItem(chocoCandy[index])
+                                              ..calculateTotal();
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : const Text(''),
+                            ),
                           ),
-                          trailing: itemAlreadyInCart
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        cart.removeItem(chocoCandies[index]);
-                                        if (!cart.cartProducts
-                                            .contains(chocoCandies[index])) {
-                                          cart.decreaseItemCount();
-                                        }
-                                        cart.calculateTotal();
-                                      },
-                                      icon: const Icon(Icons.remove),
-                                    ),
-                                    Text(
-                                      cart.cartProducts
-                                          .where((item) {
-                                            return item == chocoCandies[index];
-                                          })
-                                          .length
-                                          .toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () {
-                                        cart
-                                          ..addItem(chocoCandies[index])
-                                          ..calculateTotal();
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : const Text(''),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
                 ),

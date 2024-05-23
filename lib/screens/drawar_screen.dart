@@ -68,32 +68,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
             decoration: BoxDecoration(color: Colors.blue.shade700),
           ),
-          //Payment history
-          // ListTile(
-          //   leading: const CircleAvatar(
-          //     backgroundColor: Colors.black54,
-          //     radius: 19,
-          //     child: Icon(
-          //       Icons.payment,
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          //   trailing: const Icon(Icons.keyboard_arrow_right),
-          //   title: const Text(
-          //     'Payment History',
-          //     style: TextStyle(fontSize: 16),
-          //   ),
-          //   onTap: () {},
-          // ),
-          // const SizedBox(
-          //   height: 6,
-          // ),
-          // const Divider(
-          //   thickness: 2,
-          // ),
-
-          //Raise a request
-          ListTile(
+                ListTile(
             leading: const CircleAvatar(
               backgroundColor: Colors.black54,
               radius: 19,

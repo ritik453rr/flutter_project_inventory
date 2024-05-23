@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kitchen_app/model/user.dart';
-import 'package:kitchen_app/screens/products_screen.dart';
 import 'package:kitchen_app/screens/tabbar_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,38 +12,41 @@ class LogInScreen extends StatefulWidget {
 }
 
 class LogInScreenState extends State<LogInScreen> {
-  //declarations......
+  //variable to control the visiblity of password
   bool visibility = true;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController userIdController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  //List of users
   static List<User> users = [
     User(
-        name: "Ritik",
+        name: 'Ritik',
         id: 21120009,
-        password: "Ritik@123",
+        password: 'Ritik@123',
         mob: 9690302137,
-        email: "dritik458@gmail.com"),
+        email: 'dritik458@gmail.com'),
     User(
-        name: "Vishal",
+        name: 'Vishal',
         id: 21120008,
-        password: "Vishal@123",
+        password: 'Vishal@123',
         mob: 8077885544,
-        email: "vishal55@gmail.com"),
+        email: 'vishal55@gmail.com'),
     User(
-        name: "Shivek",
+        name: 'Shivek',
         id: 21120001,
-        password: "Shivek@123",
+        password: 'Shivek@123',
         mob: 9988776655,
-        email: "shivek@gmail.com"),
+        email: 'shivek@gmail.com'),
     User(
-      name: "Prince",
+      name: 'Prince',
       id: 21120003,
-      password: "Prince@123",
+      password: 'Prince@123',
       mob: 9877554433,
       email: 'prince5@gmail.com',
     ),
   ];
+
+  //function to check user exist or not
   bool userExist() {
     for (final i in users) {
       if (i.id.toString() == userIdController.text &&
@@ -100,8 +102,9 @@ class LogInScreenState extends State<LogInScreen> {
                           if (value == null || value == '') {
                             return 'enter user id';
                           }
+                          return null;
                         },
-                         decoration: const InputDecoration(
+                        decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person),
                           labelText: 'User ID',
                           labelStyle: TextStyle(color: Colors.black),
@@ -136,6 +139,7 @@ class LogInScreenState extends State<LogInScreen> {
                           if (value == null || value == '') {
                             return 'enter password';
                           }
+                          return null;
                         },
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.lock),
@@ -210,14 +214,14 @@ class LogInScreenState extends State<LogInScreen> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: const Text("Warning"),
-                                content: const Text("Invalid id or password"),
+                                title: const Text('Warning'),
+                                content: const Text('Invalid id or password'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: const Text("ok"),
+                                    child: const Text('ok'),
                                   ),
                                 ],
                               );
@@ -240,7 +244,7 @@ class LogInScreenState extends State<LogInScreen> {
               SizedBox(
                 height: MediaQuery.of(context).size.width * 0.08,
               ),
-              //Login Image
+              //Login Image......
               Container(
                 width: MediaQuery.of(context).size.width * 0.94,
                 height: MediaQuery.of(context).size.width * 0.7,
