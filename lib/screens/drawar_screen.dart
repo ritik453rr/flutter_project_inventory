@@ -68,7 +68,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
             decoration: BoxDecoration(color: Colors.blue.shade700),
           ),
-                ListTile(
+          ListTile(
             leading: const CircleAvatar(
               backgroundColor: Colors.black54,
               radius: 19,
@@ -112,6 +112,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   return AlertDialog(
                     title: const Text('Alert..!!'),
                     content: const Text("Are you sure to logout"),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     actions: [
                       TextButton(
                         onPressed: () async {
@@ -126,13 +129,19 @@ class _DrawerScreenState extends State<DrawerScreen> {
                             ),
                           );
                         },
-                        child: const Text('yes'),
+                        child: const Text(
+                          'yes',
+                          style: TextStyle(color: Colors.blue),
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: const Text('no'),
+                        child: const Text(
+                          'no',
+                          style: TextStyle(color: Colors.blue),
+                        ),
                       ),
                     ],
                   );

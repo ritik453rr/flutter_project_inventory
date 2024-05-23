@@ -4,7 +4,7 @@ class User {
       required this.mob,
       required this.email,
       required this.id,
-      required this.password});
+      required this.password,});
   String name;
   int mob;
   String email;
